@@ -1,0 +1,7 @@
+[submodule "tic"]
+	path = tic
+	url = https://github.com/pololu/pololu-tic-software
+[submodule "libusbp"]
+	path = libusbp
+	url = https://github.com/pololu/libusbp
+	branch = v1-latest
