@@ -1,7 +1,13 @@
 # EE798T Course Project: Automatic Antenna Control
 
+## Install prerequisites
+
+```bash
+./install_tic.sh
+```
+
 Build `tic.cpp` using:
 
 ```bash
-g++ tic.cpp $(pkg-config libpololu-tic-1 --cflags --libs)
+make
 ```
