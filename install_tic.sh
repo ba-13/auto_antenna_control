@@ -1,12 +1,17 @@
 #!/bin/bash
 
+echo "Installing pololu tic software"
 tic_software=https://www.pololu.com/file/0J1348/pololu-tic-1.8.1-linux-x86.tar.xz
 wget $tic_software
 tar -xvf pololu-tic-*.tar.xz
 sudo pololu-tic-*/install.sh
 
+echo "Installing build essentials"
 sudo apt-get install build-essential git cmake libudev-dev qtbase5-dev
-git clone https://github.com/pololu/libusbp -b v1-latest
+echo "Updating submodules"
+git submodule foreach git pull
+
+echo "Building and installing libusbp"
 cd libusbp
 mkdir build
 cd build
@@ -17,7 +22,7 @@ cd ../..
 
 read
 
-git clone https://github.com/pololu/pololu-tic-software tic
+echo "Building and installing pololu-tic-software"
 cd tic
 mkdir build
 cd build
@@ -25,8 +30,6 @@ cmake ..
 make
 sudo make install
 cd ../..
-
-read
 
 sudo cp tic/udev-rules/99-pololu.rules /etc/udev/rules.d/
 sudo sh -c 'echo /usr/local/lib > /etc/ld.so.conf.d/local.conf'
