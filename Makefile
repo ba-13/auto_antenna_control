@@ -8,11 +8,17 @@ BIN_DIR=bin
 
 SRC=$(wildcard $(SRC_DIR)/*.cpp)
 OBJ=$(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC))
-EXEC=$(BIN_DIR)/tic
+tic=$(BIN_DIR)/tic
+move_in_sine=$(BIN_DIR)/move_in_sine
 
-all: $(EXEC)
+all: $(tic) $(move_in_sine)
 
-$(EXEC): $(OBJ) $(OBJ_DIR)/tic.o
+$(tic): $(OBJ_DIR)/tic_lib.o $(OBJ_DIR)/tic.o
+	@mkdir -p bin
+	@echo "Linking $@"
+	$(CC) $^ $(LIBS) -o $@
+
+$(move_in_sine): $(OBJ_DIR)/tic_lib.o $(OBJ_DIR)/move_in_sine.o
 	@mkdir -p bin
 	@echo "Linking $@"
 	$(CC) $^ $(LIBS) -o $@
