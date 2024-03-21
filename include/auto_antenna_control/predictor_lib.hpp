@@ -10,6 +10,7 @@ namespace predictor {
         public:
             Predictor(double time_horizon);
             Eigen::Vector3f predicted_position;
+            Eigen::Vector3f predicted_position_rtp;
             void set_position(Eigen::Vector3f position);
             void set_velocity(Eigen::Vector3f velocity);
             void set_acceleration(Eigen::Vector3f acceleration);

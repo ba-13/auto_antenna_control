@@ -15,7 +15,9 @@ int main(){
     predictor->set_acceleration(Eigen::Vector3f::Random());
 
     while(1){
-        std::cout << "Predicted position: " << predictor->predict_position().transpose() << std::endl;
+        predictor->predict_position();
+        std::cout << "Predicted position: " << predictor->predicted_position.transpose() << std::endl;
+        std::cout << "Predicted position in rtp: " << predictor->predicted_position_rtp.transpose() << std::endl;
         give_random_updates(predictor);
         // sleep for 0.5 seconds
         usleep(500000);
