@@ -22,7 +22,7 @@ $(tic): $(OBJ_DIR)/tic_lib.o $(OBJ_DIR)/tic.o
 $(move_in_sine): $(OBJ_DIR)/tic_lib.o $(OBJ_DIR)/move_in_sine.o
 	@mkdir -p bin
 	@echo "Linking $@"
-	$(CC) $^ $(LIBS) -o $@
+	$(CC) $^ -pthread $(LIBS) -o $@
 
 $(predictor_node): $(OBJ_DIR)/predictor.o $(OBJ_DIR)/predictor_node.o
 	@mkdir -p bin

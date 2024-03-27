@@ -5,6 +5,10 @@
 
 tic::handle handle;
 tic::variables vars;
+const int obs_tau = 5;
+const int tau = 100;
+double freq = 2;
+bool running = true;
 
 double get_sine_freq(double freq, double time)
 {
@@ -19,8 +23,14 @@ uint64_t millis(std::chrono::_V2::system_clock::time_point time)
     return ms;
 }
 
-const int tau = 500;
-double freq = 2;
+void get_position()
+{
+    while (running)
+    {
+        vars = handle.get_variables();
+        std::this_thread::sleep_for(std::chrono::milliseconds(obs_tau));
+    }
+}
 
 int main()
 {
@@ -39,6 +49,8 @@ int main()
     handle.halt_and_set_position(0);
     handle.energize();
 
+    std::thread t_position(get_position);
+
     auto start = std::chrono::high_resolution_clock::now();
     uint64_t start_millis = millis(start);
     auto curr = start;
@@ -50,8 +62,14 @@ int main()
         value *= 1000;
         handle.set_target_position(floor(value));
         std::this_thread::sleep_for(std::chrono::milliseconds(tau));
-        std::cout << value << " " << handle.get_variables().get_current_position() << "\n";
+        while (std::abs(vars.get_current_position() - value) > 10)
+        {
+            // std::cout << "waiting for getting to position\n";
+            std::this_thread::sleep_for(std::chrono::milliseconds(obs_tau));
+        }
+        std::cout << value << " " << vars.get_current_position() << "\n";
     }
 
+    t_position.join();
     return 0;
 }

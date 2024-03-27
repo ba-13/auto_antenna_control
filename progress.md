@@ -25,3 +25,10 @@ The problems to face:
 - Once the predictor is created, we need to segment it somehow so that the path taken by the position controller is more nearer to our predicted trajectory instead of the control path chosen by the coupled motors.
 
 ## Day 2
+
+Understood the apis provided by the motor-driver tic handle, including `halt_and_set_position`, `get_variables` and `energize`.
+Realised the problem of knowing the actual position of the motor with respect to it's environment, because it starts at 0 step at every restart.
+
+## Day 3
+
+The step angle of the stepper motor NEMA17 is 1.8deg. But at full step, we observed the motor to complete full rotation at nearly 800 steps, which should have been 200 instead.
