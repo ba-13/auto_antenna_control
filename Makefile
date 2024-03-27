@@ -1,7 +1,7 @@
 CC=g++
 CFLAGS=-Wall -Wextra -std=c++11
 LIBS=$(shell pkg-config libpololu-tic-1 --cflags --libs)
-INCLUDE=-Iinclude -I/usr/local/include/libpololu-tic-1 -I/usr/local/include
+INCLUDE=-Iinclude -I/usr/local/include/libpololu-tic-1 -I/usr/local/include -I/usr/include/python3.8
 SRC_DIR=src
 OBJ_DIR=obj
 BIN_DIR=bin
@@ -27,7 +27,7 @@ $(move_in_sine): $(OBJ_DIR)/tic_lib.o $(OBJ_DIR)/move_in_sine.o
 $(predictor_node): $(OBJ_DIR)/predictor.o $(OBJ_DIR)/predictor_node.o
 	@mkdir -p bin
 	@echo "Linking $@"
-	$(CC) $^ $(LIBS) -o $@
+	$(CC) $^ $(LIBS) -lpython3.8 -o $@
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@mkdir -p obj

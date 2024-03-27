@@ -5,3 +5,6 @@
 	path = libusbp
 	url = https://github.com/pololu/libusbp
 	branch = v1-latest
+[submodule "matplotlib-cpp"]
+	path = matplotlib-cpp
+	url = https://github.com/lava/matplotlib-cpp

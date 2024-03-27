@@ -31,6 +31,15 @@ make
 sudo make install
 cd ../..
 
+echo "Building and installing matplotlib-cpp"
+cd matplotlib-cpp
+mkdir build
+cd build
+cmake ..
+make
+sudo make install
+cd ../..
+
 sudo cp tic/udev-rules/99-pololu.rules /etc/udev/rules.d/
 sudo sh -c 'echo /usr/local/lib > /etc/ld.so.conf.d/local.conf'
 sudo ldconfig
