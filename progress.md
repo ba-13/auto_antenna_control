@@ -32,3 +32,17 @@ Realised the problem of knowing the actual position of the motor with respect to
 ## Day 3
 
 The step angle of the stepper motor NEMA17 is 1.8deg. But at full step, we observed the motor to complete full rotation at nearly 800 steps, which should have been 200 instead.
+
+## Day 4
+
+Received the Raspberry Pi 4 with packages pre-installed. Able to connect to it using personal hotspot. Connect your own laptop to the hotspot, find it's ipv4 alloted, and use that as subnet mask for the nmap scan
+
+```bash
+nmap -sn 192.168.31.0/24
+```
+
+This would give the connected hosts IPs, out of which one would be the `ubuntu` RPi. Connect to it using:
+
+```bash
+sshpass -p spinlab307 ssh ubuntu@192.168.31.217
+```
