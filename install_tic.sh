@@ -11,6 +11,8 @@ sudo apt-get install build-essential git cmake libudev-dev qtbase5-dev
 echo "Updating submodules"
 git submodule foreach git pull
 
+cd modules
+
 echo "Building and installing libusbp"
 cd libusbp
 mkdir build
