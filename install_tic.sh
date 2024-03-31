@@ -46,4 +46,7 @@ sudo cp tic/udev-rules/99-pololu.rules /etc/udev/rules.d/
 sudo sh -c 'echo /usr/local/lib > /etc/ld.so.conf.d/local.conf'
 sudo ldconfig
 
+echo "Installing sfml for visualization"
+sudo apt-get install libsfml-dev
+
 # pkg-config libusbp-1 --cflags

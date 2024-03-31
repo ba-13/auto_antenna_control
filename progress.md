@@ -46,3 +46,11 @@ This would give the connected hosts IPs, out of which one would be the `ubuntu` 
 ```bash
 sshpass -p spinlab307 ssh ubuntu@192.168.31.217
 ```
+
+## Day 5
+
+Laid out the planning of the rest of the project
+
+## Day 6
+
+Refactored and converted the codebase to ROS workspace

@@ -20,6 +20,8 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "sfml_triangle_node");
     ros::NodeHandle nh;
 
+    ros::Rate rate(10);
+
     int width = 800, height = 800;
 
     sf::RenderWindow window(sf::VideoMode(width, height), "SFML Window");
@@ -64,6 +66,8 @@ int main(int argc, char **argv)
         window.draw(circle);
 
         window.display();
+
+        rate.sleep();
     }
 
     return 0;

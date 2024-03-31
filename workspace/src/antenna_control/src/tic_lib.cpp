@@ -1,4 +1,4 @@
-#include "auto_antenna_control/tic_lib.hpp"
+#include "tic_lib.hpp"
 
 tic::handle open_handle(const char *desired_serial_number)
 {
@@ -22,4 +22,12 @@ tic::handle open_handle(const char *desired_serial_number)
     }
 
     throw std::runtime_error("No device found.");
+}
+
+uint64_t millis(std::chrono::_V2::system_clock::time_point time)
+{
+    uint64_t ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+                      time.time_since_epoch())
+                      .count();
+    return ms;
 }
