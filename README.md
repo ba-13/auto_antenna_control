@@ -6,8 +6,14 @@
 ./install_tic.sh
 ```
 
-Build `tic.cpp` using:
+## Build
 
-```bash
-make
+Entire project is in the `workspace` folder. 
+Ensure you have ROS Noetic Full installed, and have Python3.8
+
+```
+cd workspace
+catkin init
+
+catkin build
 ```
