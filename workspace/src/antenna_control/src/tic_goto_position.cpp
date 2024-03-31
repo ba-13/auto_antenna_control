@@ -7,12 +7,13 @@
 
 tic::variables TIC_VARS;
 tic::handle H(nullptr);
-const int OBSERVATION_TAU = 20;
+const int OBSERVATION_TAU = 5;
 bool RUNNING = true;
 bool WRITE = false;
 std::chrono::_V2::steady_clock::time_point TIME;
 std::vector<std::pair<int64_t, int>> POSITIONS;
 std::mutex MUTEX;
+std::string FILENAME;
 
 void thread_get_position()
 {
@@ -28,7 +29,7 @@ void thread_get_position()
         catch (const std::exception &error)
         {
             std::cerr << "Handle error: " << error.what() << std::endl;
-            return;
+            continue;
         }
 
         if (WRITE)
@@ -58,7 +59,7 @@ void thread_get_position()
 
 void write_positions_to_file(int target)
 {
-    std::ofstream outfile("data.csv", std::ofstream::app);
+    std::ofstream outfile(FILENAME, std::ofstream::app);
     for (auto position : POSITIONS)
     {
         outfile << position.first << ", " << position.second << "\n";
@@ -69,10 +70,9 @@ void write_positions_to_file(int target)
 
 int main()
 {
-    tic::handle handle;
     try
     {
-        handle = open_handle(nullptr);
+        H = open_handle(nullptr);
     }
     catch (const std::exception &error)
     {
@@ -80,52 +80,57 @@ int main()
         return 1;
     }
 
-    tic::variables vars = handle.get_variables();
-    handle.halt_and_set_position(0);
-    handle.energize();
+    TIC_VARS = H.get_variables();
+    H.halt_and_set_position(0);
+    std::cout << "Resetting current position as 0\n";
+    H.energize();
 
     // keep obtaining current position
     std::thread t_position(thread_get_position);
 
-    std::cout << "Max speed is:" << vars.get_max_speed() << ".\n";
+    std::cout << "Max speed: " << TIC_VARS.get_max_speed() << ".\n";
+    std::cout << "Step mode: " << TIC_VARS.get_step_mode() << ".\n";
 
-    std::vector<int> targets = {1, 3, 10, 30, 100, 300, 1000};
+    std::vector<int> targets = {10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 1000};
 
-    handle.exit_safe_start();
+    H.exit_safe_start();
 
-    std::ofstream outfile("data.csv"); // clear the content
+    FILENAME = "data" + std::to_string(TIC_VARS.get_max_speed()) + ".csv";
+    std::ofstream outfile(FILENAME); // clear the content
     outfile.close();
 
     for (int target : targets)
     {
-        while (true)
+        std::cout << "Going to target: " << target << std::endl;
+        MUTEX.lock();
+        POSITIONS.clear();
+        MUTEX.unlock();
+        TIME = std::chrono::steady_clock::now();
+        WRITE = true;
+        // go to target
+        H.set_target_position(target);
+        std::this_thread::sleep_for(std::chrono::milliseconds(OBSERVATION_TAU));
+        // sleep until reached target
+        while (std::abs(TIC_VARS.get_current_position() - target) > 0)
         {
-            MUTEX.lock();
-            POSITIONS.clear();
-            MUTEX.unlock();
-            TIME = std::chrono::steady_clock::now();
-            WRITE = true;
-            // go to target
-            handle.set_target_position(target);
             std::this_thread::sleep_for(std::chrono::milliseconds(OBSERVATION_TAU));
-            // sleep until reached target
-            while (std::abs(vars.get_current_position() - target) > 0)
-            {
-                std::this_thread::sleep_for(std::chrono::milliseconds(OBSERVATION_TAU));
-            }
+        }
+        std::cout << "Reached target. Going back to Home\n";
 
-            // go back to home
-            WRITE = false;
-            write_positions_to_file(target); // save to csv
-            handle.set_target_position(0);
+        // go back to home
+        WRITE = false;
+        write_positions_to_file(target); // save to csv
+        H.set_target_position(0);
+        std::this_thread::sleep_for(std::chrono::milliseconds(OBSERVATION_TAU));
+        // sleep until at home
+        while (TIC_VARS.get_current_position() > 0)
+        {
             std::this_thread::sleep_for(std::chrono::milliseconds(OBSERVATION_TAU));
-            // sleep until at home
-            while (std::abs(vars.get_current_position() - target) > 0)
-            {
-                std::this_thread::sleep_for(std::chrono::milliseconds(OBSERVATION_TAU));
-            }
         }
     }
+
+    RUNNING = false;
+    t_position.join();
 
     return 0;
 }

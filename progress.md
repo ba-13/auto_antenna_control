@@ -54,3 +54,14 @@ Laid out the planning of the rest of the project
 ## Day 6
 
 Refactored and converted the codebase to ROS workspace
+Took response curves, analyze using:
+
+```bash
+python plot_positions.py --file ./data/u20/oneeigth/data4000000.csv
+```
+
+Some notes after taking responses to target positions:
+
+- Irrespective of the step mode, same target position deviation takes the same amount of time.
+- Taken data can be used to model the position control such that given target and current speed, one should be able to predict the curve taken. This would help to choose such waypoints that would have non-zero speeds by giving a furthur one as target.
+- Need to obtain curves with non-zero initial speed (may be needed explicitly)
