@@ -2,6 +2,9 @@
 #include <vector>
 #include <cmath>
 #include <eigen3/Eigen/Dense>
+#include <geometry_msgs/PoseStamped.h>
+#include <geometry_msgs/TwistStamped.h>
+#include <sensor_msgs/Imu.h>
 
 namespace predictor
 {
@@ -15,9 +18,9 @@ namespace predictor
         Predictor(double time_horizon);
         Eigen::Vector3f predicted_position;
         Eigen::Vector3f predicted_position_rtp;
-        void set_position(Eigen::Vector3f position);
-        void set_velocity(Eigen::Vector3f velocity);
-        void set_acceleration(Eigen::Vector3f acceleration);
+        void set_position(const geometry_msgs::PoseStamped::ConstPtr &msg);
+        void set_velocity(const geometry_msgs::TwistStamped::ConstPtr &msg);
+        void set_acceleration(const sensor_msgs::Imu::ConstPtr &msg);
         Eigen::Vector3f predict_position();
     };
 } // namespace predictor
