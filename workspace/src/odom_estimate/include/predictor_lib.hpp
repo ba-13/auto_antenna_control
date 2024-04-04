@@ -12,6 +12,8 @@ namespace predictor
     {
     private:
         double time_horizon;
+        double lag;
+        double last_time;
         Eigen::Vector3f position, velocity, acceleration;
 
     public:
@@ -22,6 +24,7 @@ namespace predictor
         void set_velocity(const geometry_msgs::TwistStamped::ConstPtr &msg);
         void set_acceleration(const sensor_msgs::Imu::ConstPtr &msg);
         Eigen::Vector3f predict_position();
+        void lag_update();
     };
 } // namespace predictor
 

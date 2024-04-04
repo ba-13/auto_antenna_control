@@ -21,6 +21,8 @@ int main(int argc, char **argv)
     ros::Publisher pub_predicted_position = nh.advertise<geometry_msgs::PoseStamped>("/predicted/pose", 1);
     while(ros::ok())
     {
+        ros::spinOnce();
+        predictor.lag_update();
         predictor.predict_position();
         geometry_msgs::PoseStamped msg;
         msg.pose.position.x = predictor.predicted_position_rtp(0);
@@ -28,7 +30,6 @@ int main(int argc, char **argv)
         msg.pose.position.z = rad_to_deg(predictor.predicted_position_rtp(2));
         msg.header.stamp = ros::Time::now();
         pub_predicted_position.publish(msg);
-        ros::spinOnce();
         loop_rate.sleep();
     }
     return 0;
