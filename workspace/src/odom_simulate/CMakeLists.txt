@@ -100,7 +100,7 @@ find_package(Eigen3 3.3 REQUIRED NO_MODULE)
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
- INCLUDE_DIRS include
+#  INCLUDE_DIRS include
 #  LIBRARIES odom_simulate
 #  CATKIN_DEPENDS other_catkin_pkg
 #  DEPENDS system_lib
