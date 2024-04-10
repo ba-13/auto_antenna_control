@@ -1,22 +1,19 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(antenna_control)
+project(messages)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
-add_compile_options(-std=c++11)
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# add_compile_options(-std=c++11)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  roscpp
-  messages
+  message_generation
+  std_msgs
 )
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
-find_package(Eigen3 REQUIRED)
 
 
 ## Uncomment this if the package has a setup.py. This macro ensures
@@ -49,11 +46,10 @@ find_package(Eigen3 REQUIRED)
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
-#   Message2.msg
-# )
+add_message_files(
+  FILES
+  MotorPose.msg
+)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -70,10 +66,10 @@ find_package(Eigen3 REQUIRED)
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs  # Or other packages containing msgs
-# )
+generate_messages(
+  DEPENDENCIES
+  std_msgs
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -105,12 +101,11 @@ find_package(Eigen3 REQUIRED)
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
- INCLUDE_DIRS 
-  include
-#  LIBRARIES antenna_control
+#  INCLUDE_DIRS include
+#  LIBRARIES messages
  CATKIN_DEPENDS 
-  roscpp
-  messages
+  message_generation 
+  std_msgs
 #  DEPENDS system_lib
 )
 
@@ -121,22 +116,14 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-include
-/usr/local/include/libpololu-tic-1
-${catkin_INCLUDE_DIRS}
-${EIGEN3_INCLUDE_DIRS}
+# include
+  ${catkin_INCLUDE_DIRS}
 )
-
-# link_directories(${Eigen3_INCLUDE_DIRS})
 
 ## Declare a C++ library
-add_library(tic_lib
-  src/tic_lib.cpp
-)
-
-add_library(motor_pose_predictor_lib
-  src/predictor_lib.cpp
-)
+# add_library(${PROJECT_NAME}
+#   src/${PROJECT_NAME}/messages.cpp
+# )
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -146,8 +133,7 @@ add_library(motor_pose_predictor_lib
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(tic_collect_data src/tic_collect_data.cpp)
-add_executable(tic_current_pose src/pose_node.cpp)
+# add_executable(${PROJECT_NAME}_node src/messages_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -160,16 +146,8 @@ add_executable(tic_current_pose src/pose_node.cpp)
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(tic_collect_data
-  ${catkin_LIBRARIES} tic_lib pololu-tic-1
-)
-
-target_link_libraries(tic_current_pose
-  ${catkin_LIBRARIES} tic_lib pololu-tic-1
-)
-
-# target_link_libraries(tic_predictor
-#   ${Eigen3_LIBRARIES}
+# target_link_libraries(${PROJECT_NAME}_node
+#   ${catkin_LIBRARIES}
 # )
 
 #############
@@ -219,7 +197,7 @@ target_link_libraries(tic_current_pose
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_antenna_control.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_messages.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()

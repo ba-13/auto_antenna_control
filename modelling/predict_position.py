@@ -12,3 +12,4 @@ def giveTillX1(start_speed, max_speed, target):
     start_time = start_speed / m1
     start_time = np.round(start_time / tau) * tau
     
+ 

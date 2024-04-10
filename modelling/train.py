@@ -10,7 +10,7 @@ speed = 400
 tau = 20
 max_speed_in_tau = tau * speed / 1000
 
-file_name = f"./data/u{tau}/onefourth/data{speed}0000.csv"
+file_name = f"../workspace/data/u{tau}/onefourth/data{speed}0000.csv"
 # the following targets are provided while generating the data
 targets = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 1000]
 
