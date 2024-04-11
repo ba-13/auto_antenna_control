@@ -229,5 +229,10 @@ target_link_libraries(motor_control_node
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
 
+add_executable(predictor_lib_test test/predictor_lib_test.cpp)
+
+target_link_libraries(predictor_lib_test
+  motor_pose_predictor_lib
+)
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)

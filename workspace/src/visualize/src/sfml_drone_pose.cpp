@@ -17,7 +17,7 @@ void poseCallback(const nav_msgs::Odometry &msg)
 
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "sfml_triangle_node");
+    ros::init(argc, argv, "sfml_drone_pose");
     ros::NodeHandle nh;
 
     ros::Rate rate(10);

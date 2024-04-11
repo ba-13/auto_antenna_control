@@ -5,14 +5,14 @@ using namespace Eigen;
 /*
 int wrong_get_next_target_change(int Ni, int actual_change) {
   double a =
-      (m1 - m2) * TAU * (1 / 2 + (m1 - m2) / (2 * m2) - (1 + (m1 - m2) / m2));
-  double c = -actual_change - m1 * TAU * Ni * (Ni - 1) / 2;
+      (m1 - m2) * (1 / 2 + (m1 - m2) / (2 * m2) - (1 + (m1 - m2) / m2));
+  double c = -actual_change - m1 * Ni * (Ni - 1) / 2;
   double Nt = sqrt(-c / a);
-  double bias = (m1 - m2) * TAU * Nt;
-  int N0 = multiple_tau(-bias / m2);
+  double bias = (m1 - m2) * Nt;
+  int N0 = round(-bias / m2);
   double sum_till_zero =
-      m2 * TAU / 2 * (N0 * (N0 + 1) - Nt * (Nt + 1) + bias * (N0 - Nt));
-  double sum_till_top = m1 * TAU / 2 * (Nt * (Nt + 1) - Ni * (Ni - 1));
+      m2 / 2 * (N0 * (N0 + 1) - Nt * (Nt + 1) + bias * (N0 - Nt));
+  double sum_till_top = m1 / 2 * (Nt * (Nt + 1) - Ni * (Ni - 1));
   return round(sum_till_top + sum_till_zero);
 }
 */
@@ -28,10 +28,9 @@ std::pair<double, double> quadratic_equation(double a, double b, double c) {
 // up and down before Nf
 int MotorPositionPredictor::case2_get_next_target_change(int Ni, int Nf,
                                                          int actual_change) {
-  double a = -(m1 - m2) * TAU / 2;
-  double b = (m1 - m2) * TAU * Nf;
-  double c = -m1 * TAU * Ni * (Ni - 1) / 2 + m2 * TAU * Nf * (Nf + 1) / 2 -
-             actual_change;
+  double a = -(m1 - m2) / 2;
+  double b = (m1 - m2) * Nf;
+  double c = -m1 * Ni * (Ni - 1) / 2 + m2 * Nf * (Nf + 1) / 2 - actual_change;
   std::pair<double, double> Nts = quadratic_equation(a, b, c);
   int Nt;
   if (Ni < Nts.first <= Nf)
@@ -45,9 +44,9 @@ int MotorPositionPredictor::case2_get_next_target_change(int Ni, int Nf,
 // up, saturate and down before Nf
 int MotorPositionPredictor::case3_get_next_target_change(
     int Ns, int Nf, int actual_change, double sum_till_saturation) {
-  double a = m2 * TAU / 2;
-  double b = -m2 * TAU * (0.5 + Nf);
-  double c = saturation_vel * (Nf - Ns) + m2 * TAU / 2 * Nf * (Nf + 1) +
+  double a = m2 / 2;
+  double b = -m2 * (0.5 + Nf);
+  double c = saturation_vel * (Nf - Ns) + m2 / 2 * Nf * (Nf + 1) +
              sum_till_saturation - actual_change;
   std::pair<double, double> Nts = quadratic_equation(a, b, c);
   int Nt;
@@ -66,78 +65,112 @@ int MotorPositionPredictor::case3_get_next_target_change(
  * @returns {actual_change_prediction, target_change}
  */
 std::pair<double, double> MotorPositionPredictor::get_next_target_change(
-    double init_velocity, int actual_change, int timesteps) {
+    double init_velocity, int change_needed, int timesteps) {
 
+  int actual_change = change_needed;
   if (actual_change < 0) {
     m1 = M2, m2 = M1;
     saturation_vel = -S - 0.5;
+    actual_change = -actual_change;
   } else {
     m1 = M1, m2 = M2;
     saturation_vel = S + 0.5;
   }
 
   // consider only the case when init_velocity first moves along m1
-  int Ni = multiple_tau(init_velocity / m1) / TAU;
-  int Ns = multiple_tau(saturation_vel / m1) / TAU;
+  int Ni = round(init_velocity / m1);
+  int Ns = round(saturation_vel / m1);
   int Nf = Ni + timesteps;
+  std::cout << "timepoints: Ni " << Ni << " Ns " << Ns << " Nf " << Nf
+            << std::endl;
   double sum_till_saturation = m1_slope_sum(Ni - 1, Ns);
+  std::cout << "sum till saturation: " << sum_till_saturation << std::endl;
+
+  double actual_change_prediction, target_change;
 
   if (Nf < Ns) {
     // reaching before saturation
-    if (sum_till_saturation >= actual_change) {
+    if (fabs(sum_till_saturation) < fabs(actual_change)) {
+      std::cout << "case 1 impossible before saturation\n";
       // case of impossible needs
-      double bias = (m1 - m2) * Ns * TAU;
-      int N0 = multiple_tau(-bias / m2);
+      double bias = (m1 - m2) * Ns;
+      int N0 = round(-bias / m2);
       double sum_till_zero = m2_slope_sum(Ns, N0, bias);
+      std::cout << "bias " << bias << " N0 " << N0 << std::endl;
 
-      return {sum_till_saturation, sum_till_saturation + sum_till_zero};
+      std::cout << "sum till zero: " << sum_till_zero << "\n";
+      actual_change_prediction = sum_till_saturation;
+      target_change = sum_till_saturation + sum_till_zero;
     } else {
       // case of up and down
+      std::cout << "case 2 before saturation\n";
       int Nt = case2_get_next_target_change(Ni, Nf, actual_change);
-      double bias = (m1 - m2) * TAU * Nt;
-      int N0 = multiple_tau(-bias / m2);
+      double bias = (m1 - m2) * Nt;
+      int N0 = round(-bias / m2);
+      std::cout << "bias " << bias << " N0 " << N0 << std::endl;
+
       double sum_till_Nt = m1_slope_sum(Ni - 1, Nt);
       double sum_till_zero = m2_slope_sum(Nt, N0, bias);
-      return {sum_till_Nt + m2_slope_sum(Nt, Nf, bias),
-              sum_till_Nt + sum_till_zero};
+      std::cout << "sum till zero: " << sum_till_zero << "\n";
+      actual_change_prediction = sum_till_Nt + m2_slope_sum(Nt, Nf, bias);
+      target_change = sum_till_Nt + sum_till_zero;
     }
   } else {
     // reaching after saturation
     double sum_saturation_to_time = saturated_sum(Ns, Nf);
-    if (sum_till_saturation + sum_saturation_to_time >= actual_change) {
+    std::cout << "sum after saturation and before final time: "
+              << sum_saturation_to_time << std::endl;
+    if (fabs(sum_till_saturation + sum_saturation_to_time) <
+        fabs(actual_change)) {
       // case of impossible needs
-      double bias = (saturation_vel - m2 * TAU * Nf);
-      int N0 = multiple_tau(-bias / m2);
+      std::cout << "case 3 impossible after saturation\n";
+      double bias = (saturation_vel - m2 * Nf);
+      int N0 = round(-bias / m2);
       double sum_till_zero = m2_slope_sum(Nf, N0, bias);
+      std::cout << "bias " << bias << " N0 " << N0 << std::endl;
+      std::cout << "sum till zero: " << sum_till_zero << "\n";
 
-      return {sum_till_saturation + sum_saturation_to_time,
-              sum_till_saturation + sum_saturation_to_time + sum_till_zero};
+      actual_change_prediction = sum_till_saturation + sum_saturation_to_time;
+      target_change =
+          sum_till_saturation + sum_saturation_to_time + sum_till_zero;
     } else {
-      double bias = (m1 - m2) * Ns * TAU;
+      double bias = (m1 - m2) * Ns;
       double sum_till_threshold = m2_slope_sum(Ns, Nf, bias);
-      if (sum_till_saturation + sum_till_threshold <= actual_change) {
+      if (fabs(sum_till_saturation + sum_till_threshold) >
+          fabs(actual_change)) {
         // doesn't saturate
+        std::cout << "case 4 after saturation Nf doesnt saturate\n";
         int Nt = case2_get_next_target_change(Ni, Nf, actual_change);
-        double bias = (m1 - m2) * TAU * Nt;
-        int N0 = multiple_tau(-bias / m2);
+        double bias = (m1 - m2) * Nt;
+        int N0 = round(-bias / m2);
+        std::cout << "bias " << bias << " N0 " << N0 << std::endl;
+
         double sum_till_Nt = m1_slope_sum(Ni - 1, Nt);
         double sum_till_zero = m2_slope_sum(Nt, N0, bias);
-        return {sum_till_Nt + m2_slope_sum(Nt, Nf, bias),
-                sum_till_Nt + sum_till_zero};
+        std::cout << "sum till zero: " << sum_till_zero << "\n";
+        actual_change_prediction = sum_till_Nt + m2_slope_sum(Nt, Nf, bias);
+        target_change = sum_till_Nt + sum_till_zero;
       } else {
         // case of saturating then coming down
+        std::cout << "case 5 after saturation Nf saturates\n";
         int Nt = case3_get_next_target_change(Ns, Nf, actual_change,
                                               sum_till_saturation);
-        double bias = saturation_vel - m2 * Nt * TAU;
-        int N0 = multiple_tau(-bias / m2);
+        double bias = saturation_vel - m2 * Nt;
+        int N0 = round(-bias / m2);
+        std::cout << "bias " << bias << " N0 " << N0 << std::endl;
+
         double sum_saturation_to_time = saturated_sum(Ns, Nt);
         double sum_till_zero = m2_slope_sum(Nt, N0, bias);
-        return {sum_till_saturation + sum_saturation_to_time +
-                    m2_slope_sum(Nt, Nf, bias),
-                sum_till_saturation + sum_saturation_to_time + sum_till_zero};
+        std::cout << "sum till zero: " << sum_till_zero << "\n";
+        actual_change_prediction = sum_till_saturation +
+                                   sum_saturation_to_time +
+                                   m2_slope_sum(Nt, Nf, bias);
+        target_change =
+            sum_till_saturation + sum_saturation_to_time + sum_till_zero;
       }
     }
   }
+  return {actual_change_prediction, target_change};
 }
 
 MatrixXf generate_speed_transform(int n) {
