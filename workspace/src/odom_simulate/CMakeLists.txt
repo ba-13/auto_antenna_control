@@ -133,6 +133,7 @@ ${catkin_INCLUDE_DIRS}
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(sim_drone_node src/sim_drone_node.cpp)
+add_executable(motor_pose_sim src/motor_pose_sim.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -147,6 +148,10 @@ add_executable(sim_drone_node src/sim_drone_node.cpp)
 ## Specify libraries to link a library or executable target against
 target_link_libraries(sim_drone_node
 ${catkin_LIBRARIES}  Eigen3::Eigen
+)
+target_link_libraries(motor_pose_sim
+  ${catkin_LIBRARIES}
+  
 )
 
 #############

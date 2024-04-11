@@ -133,7 +133,6 @@ ${catkin_INCLUDE_DIRS}
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(motor_pose_sim src/motor_pose_sim.cpp)
 
 add_executable(sfml_drone_pose src/sfml_drone_pose.cpp)
 
@@ -152,10 +151,7 @@ target_link_libraries(sfml_drone_pose
   ${catkin_LIBRARIES}
   sfml-graphics
 )
-target_link_libraries(motor_pose_sim
-  ${catkin_LIBRARIES}
-  sfml-graphics
-)
+
 #############
 ## Install ##
 #############
