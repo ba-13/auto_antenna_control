@@ -37,9 +37,9 @@ int main(int argc, char **argv) {
     MotorPositionPredictor* predictor = new MotorPositionPredictor();
     while (ros::ok()) {
         ros::spinOnce();
-        auto command = predictor->get_next_target_change(smooth_vel, target - curr_pos, 50/r);
+        // auto command = predictor->get_next_target_change(smooth_vel, target - curr_pos, 50/r);
 
-        // std::pair<double, double> command = {0, target-curr_pos};
+        std::pair<double, double> command = {0, target-curr_pos};
         H.set_target_position(curr_pos + command.second);
         std_msgs::Int32 command_msg;
         command_msg.data = curr_pos + command.second;
