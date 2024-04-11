@@ -5,18 +5,23 @@ int main(int argc, char **argv)
 {
   ros::init(argc, argv, "motor_pose_sim");
   ros::NodeHandle nh;
-  ros::Rate rate(1);
+  float r = 5;
+  ros::Rate rate(r);
 
   ros::Publisher motor_pose_pub = nh.advertise<std_msgs::Int32>("/motor_pose_sim", 5);
-
+  ros::Publisher lagged_command = nh.advertise<std_msgs::Int32>("/motor_pose_sim_lagged", 5);
   float freq = 0.2;
 
   while (ros::ok())
   {
     std_msgs::Int32 msg;
+    double A = 300;
     // msg.header.stamp = ros::Time::now();
-    msg.data = 300 * sin(2 * M_PI * freq * ros::Time::now().toSec());
+    msg.data = A * sin(2 * M_PI * freq * ros::Time::now().toSec());
     motor_pose_pub.publish(msg);
+    // msg.header.stamp = ros::Time::now();
+    msg.data = A * sin(2 * M_PI * freq * (ros::Time::now().toSec()-(1/r)));
+    lagged_command.publish(msg);
     rate.sleep();
   }
 

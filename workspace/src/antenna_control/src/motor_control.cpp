@@ -21,7 +21,8 @@ void motor_info_callback(const messages::MotorPose::ConstPtr &msg) {
 int main(int argc, char **argv) {
     ros::init(argc, argv, "motor_control");
     ros::NodeHandle nh;
-    ros::Rate rate(1);
+    double r = 5;
+    ros::Rate rate(r);
 
     ros::Subscriber motor_pose_sub = nh.subscribe("/motor_pose_sim", 5, motor_pose_callback);
     ros::Subscriber motor_info_sub = nh.subscribe("/motor/phi/pose", 5, motor_info_callback);
@@ -36,7 +37,9 @@ int main(int argc, char **argv) {
     MotorPositionPredictor* predictor = new MotorPositionPredictor();
     while (ros::ok()) {
         ros::spinOnce();
-        auto command = predictor->get_next_target_change(smooth_vel, target - curr_pos, 50);
+        auto command = predictor->get_next_target_change(smooth_vel, target - curr_pos, 50/r);
+
+        // std::pair<double, double> command = {0, target-curr_pos};
         H.set_target_position(curr_pos + command.second);
         std_msgs::Int32 command_msg;
         command_msg.data = curr_pos + command.second;
