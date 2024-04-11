@@ -4,9 +4,9 @@
 int main(int argc, char **argv) {
     ros::init(argc, argv, "motor_pose_sim");
     ros::NodeHandle nh;
-    ros::Rate rate(3);
+    ros::Rate rate(1);
 
-    ros::Publisher motor_pose_pub = nh.advertise<std_msgs::Int32>("motor_pose_sim", 10);
+    ros::Publisher motor_pose_pub = nh.advertise<std_msgs::Int32>("/motor_pose_sim", 5);
 
     float freq = 0.2;
 

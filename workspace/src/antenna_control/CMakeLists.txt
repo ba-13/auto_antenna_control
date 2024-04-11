@@ -138,6 +138,7 @@ add_library(motor_pose_predictor_lib
   src/predictor_lib.cpp
 )
 
+
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
 ## either from message generation or dynamic reconfigure
@@ -148,7 +149,7 @@ add_library(motor_pose_predictor_lib
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(tic_collect_data src/tic_collect_data.cpp)
 add_executable(tic_current_pose src/pose_node.cpp)
-
+add_executable(motor_control_node src/motor_control.cpp)
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use
@@ -168,6 +169,10 @@ target_link_libraries(tic_current_pose
   ${catkin_LIBRARIES} tic_lib pololu-tic-1
 )
 
+target_link_libraries(motor_control_node
+  ${catkin_LIBRARIES} tic_lib pololu-tic-1
+  motor_pose_predictor_lib
+)
 # target_link_libraries(tic_predictor
 #   ${Eigen3_LIBRARIES}
 # )
