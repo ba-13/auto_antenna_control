@@ -45,6 +45,7 @@ namespace predictor
         auto time = ros::Time::now();
         double current_time = time.sec + time.nsec * 1e-9;
         this->lag = current_time - this->last_time;
+        ROS_WARN("Lag updated to %f", this->lag);
     }
 }
 
