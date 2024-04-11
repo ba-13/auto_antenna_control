@@ -25,13 +25,23 @@ int main(int argc, char **argv) {
 
     ros::Subscriber motor_pose_sub = nh.subscribe("/motor_pose_sim", 5, motor_pose_callback);
     ros::Subscriber motor_info_sub = nh.subscribe("/motor/phi/pose", 5, motor_info_callback);
+    ros::Publisher motor_commands = nh.advertise<std_msgs::Int32>("/motor/phi/command", 5);
+    tic::handle H = open_handle(nullptr);
 
-    tic::handle H(nullptr);
+    H.halt_and_set_position(0);
+    std::cout << "Resetting current position as 0\n";
+    H.energize();
+
+
     MotorPositionPredictor* predictor = new MotorPositionPredictor();
     while (ros::ok()) {
         ros::spinOnce();
         auto command = predictor->get_next_target_change(smooth_vel, target - curr_pos, 50);
         H.set_target_position(curr_pos + command.second);
+        std_msgs::Int32 command_msg;
+        command_msg.data = curr_pos + command.second;
+        ROS_ERROR("Command: %lf %lf", command.first, curr_pos + command.second);
+        motor_commands.publish(command_msg);
         rate.sleep();
     }
 

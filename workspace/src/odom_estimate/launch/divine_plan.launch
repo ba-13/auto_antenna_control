@@ -3,7 +3,11 @@
 
 <node pkg = "odom_estimate" type = "predictor_node" name = "predictor_node" output = "screen" />
 
-<node pkg = "antenna_control" type = "tic_collect_data" name = "tic_collect_data" output = "screen" />
+<node pkg = "odom_simulate" type = "motor_pose_sim" name = "motor_pose_sim" output=  "screen"/>
+
+<!-- <node pkg = "antenna_control" type = "tic_collect_data" name = "tic_collect_data" output = "screen" /> -->
 
 <node pkg = "antenna_control" type = "tic_current_pose" name = "tic_current_pose" output = "screen" />
+
+<node pkg = "antenna_control" type = "motor_control_node" name = "motor_control_node" output = "screen" />
 </launch>
