@@ -12,10 +12,12 @@ private:
   double m1, m2;
   double S = 8.0;
   double saturation_vel;
-  int case2_get_next_target_change(int Ni, int Nf, int actual_change);
+  double case2_get_next_target_change(double Ni, int actual_change);
 
-  int case3_get_next_target_change(int Ns, int Nf, int actual_change,
-                                   double sum_till_saturation);
+  // int case3_get_next_target_change(int Ns, int Nf, int actual_change,
+  //                                  double sum_till_saturation);
+
+  double case4_get_next_target_change(double Ni, double Ns, int actual_change);
 
   // slope sum excluding value at Ni, and including at Nf
   inline double m2_slope_sum(int Ni, int Nf, double bias) {
