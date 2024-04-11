@@ -17,7 +17,8 @@ int wrong_get_next_target_change(int Ni, int actual_change) {
 }
 */
 
-std::pair<double, double> quadratic_equation(double a, double b, double c) {
+std::pair<double, double> quadratic_equation(double a, double b, double c)
+{
   double D = sqrt(b * b - 4 * a * c);
   double Nt1 = (-b + D) / (2 * a);
   double Nt2 = (-b - D) / (2 * a);
@@ -139,7 +140,9 @@ std::pair<double, double> MotorPositionPredictor::get_next_target_change(
       actual_change_prediction = sum_till_Nt + m2_slope_sum(Nt, Nf, bias);
       target_change = sum_till_Nt + sum_till_zero;
     }
-  } else {
+  }
+  else
+  {
     // reaching after saturation
     double sum_saturation_to_time = saturated_sum(Ns, Nf);
     std::cout << "sum after saturation and before final time: "
@@ -197,7 +200,8 @@ std::pair<double, double> MotorPositionPredictor::get_next_target_change(
   return {actual_change_prediction, target_change};
 }
 
-MatrixXf generate_speed_transform(int n) {
+MatrixXf generate_speed_transform(int n)
+{
   MatrixXf mat(n, n);
   mat.setIdentity();
   int shiftDownBy = 2;
