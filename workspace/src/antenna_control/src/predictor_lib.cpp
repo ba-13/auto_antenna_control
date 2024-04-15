@@ -195,7 +195,13 @@ std::pair<double, double> MotorPositionPredictor::get_next_target_change(
     }
   }
   return {actual_change_prediction, target_change};
+
+  
 }
+
+std::pair<double, double> MotorPositionPredictor::translate_to_steps(double theta, double phi){
+    return {A_theta*theta + B_theta, A_phi*phi + B_phi};
+  }
 
 MatrixXf generate_speed_transform(int n) {
   MatrixXf mat(n, n);

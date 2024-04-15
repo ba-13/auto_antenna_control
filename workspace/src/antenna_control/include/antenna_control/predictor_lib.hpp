@@ -42,11 +42,17 @@ public:
     M1 *= TAU;
     M2 *= TAU;
   }
+  double A_phi = 19.2*200;
+  double B_phi = 0.0;
+  double A_theta = 4*200;
+  double B_theta = 0.0;
 
   std::pair<double, double> get_next_target_change(double init_velocity,
                                                    int actual_change,
                                                    int timesteps);
-};
 
+  std::pair<double, double> translate_to_steps(double theta, double phi);
+
+};
 Eigen::MatrixXf generate_speed_transform(int n);
 std::pair<double, double> quadratic_equation(double a, double b, double c);
