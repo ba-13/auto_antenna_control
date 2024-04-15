@@ -65,3 +65,7 @@ Some notes after taking responses to target positions:
 - Irrespective of the step mode, same target position deviation takes the same amount of time.
 - Taken data can be used to model the position control such that given target and current speed, one should be able to predict the curve taken. This would help to choose such waypoints that would have non-zero speeds by giving a furthur one as target.
 - Need to obtain curves with non-zero initial speed (may be needed explicitly)
+
+# Day 9
+
+Azimuth - 19.2

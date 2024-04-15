@@ -17,8 +17,7 @@ int wrong_get_next_target_change(int Ni, int actual_change) {
 }
 */
 
-std::pair<double, double> quadratic_equation(double a, double b, double c)
-{
+std::pair<double, double> quadratic_equation(double a, double b, double c) {
   double D = sqrt(b * b - 4 * a * c);
   double Nt1 = (-b + D) / (2 * a);
   double Nt2 = (-b - D) / (2 * a);
@@ -46,18 +45,18 @@ int MotorPositionPredictor::case2_get_next_target_change(int Ni, int Nf,
 
 double MotorPositionPredictor::case2_get_next_target_change(double Ni,
                                                             int actual_change) {
-  double Nt = sqrt((abs(m1) * Ni * Ni + 2 * actual_change) /
-                   (abs(m1) * (1 + abs(m1) / abs(m2))));
+  double Nt = sqrt((fabs(m1) * Ni * Ni + 2 * actual_change) /
+                   (fabs(m1) * (1 + fabs(m1) / fabs(m2))));
   std::cout << "Nt " << Nt << std::endl;
   return Nt;
 }
 
-double MotorPositionPredictor::case4_get_next_target_change(double Ni,
+double MotorPositionPredictor::case5_get_next_target_change(double Ni,
                                                             double Ns,
                                                             int actual_change) {
   double Nt = (actual_change + saturation_vel * Ns -
-               0.5 * abs(m1) * (Ns * Ns - Ni * Ni) -
-               0.5 * saturation_vel * saturation_vel / abs(m2)) /
+               0.5 * fabs(m1) * (Ns * Ns - Ni * Ni) -
+               0.5 * saturation_vel * saturation_vel / fabs(m2)) /
               saturation_vel;
   std::cout << "Nt " << Nt << std::endl;
   return Nt;
@@ -140,9 +139,7 @@ std::pair<double, double> MotorPositionPredictor::get_next_target_change(
       actual_change_prediction = sum_till_Nt + m2_slope_sum(Nt, Nf, bias);
       target_change = sum_till_Nt + sum_till_zero;
     }
-  }
-  else
-  {
+  } else {
     // reaching after saturation
     double sum_saturation_to_time = saturated_sum(Ns, Nf);
     std::cout << "sum after saturation and before final time: "
@@ -181,7 +178,7 @@ std::pair<double, double> MotorPositionPredictor::get_next_target_change(
         // case of saturating then coming down
         std::cout
             << "case 5 Ns < Nf, velocity saturates for a bit then comes down\n";
-        double Nt = case4_get_next_target_change(Ns, Ns, actual_change);
+        double Nt = case5_get_next_target_change(Ns, Ns, actual_change);
         double bias = saturation_vel - m2 * Nt;
         double N0 = -bias / m2;
         std::cout << "bias " << bias << " N0 " << N0 << std::endl;
@@ -200,8 +197,7 @@ std::pair<double, double> MotorPositionPredictor::get_next_target_change(
   return {actual_change_prediction, target_change};
 }
 
-MatrixXf generate_speed_transform(int n)
-{
+MatrixXf generate_speed_transform(int n) {
   MatrixXf mat(n, n);
   mat.setIdentity();
   int shiftDownBy = 2;
