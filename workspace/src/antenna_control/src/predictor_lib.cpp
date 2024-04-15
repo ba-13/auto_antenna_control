@@ -2,46 +2,12 @@
 
 using namespace Eigen;
 
-/*
-int wrong_get_next_target_change(int Ni, int actual_change) {
-  double a =
-      (m1 - m2) * (1 / 2 + (m1 - m2) / (2 * m2) - (1 + (m1 - m2) / m2));
-  double c = -actual_change - m1 * Ni * (Ni - 1) / 2;
-  double Nt = sqrt(-c / a);
-  double bias = (m1 - m2) * Nt;
-  int N0 = round(-bias / m2);
-  double sum_till_zero =
-      m2 / 2 * (N0 * (N0 + 1) - Nt * (Nt + 1) + bias * (N0 - Nt));
-  double sum_till_top = m1 / 2 * (Nt * (Nt + 1) - Ni * (Ni - 1));
-  return round(sum_till_top + sum_till_zero);
-}
-*/
-
 std::pair<double, double> quadratic_equation(double a, double b, double c) {
   double D = sqrt(b * b - 4 * a * c);
   double Nt1 = (-b + D) / (2 * a);
   double Nt2 = (-b - D) / (2 * a);
   return {Nt1, Nt2};
 }
-
-// Ni is start time, Nf is the target time
-// up and down before Nf
-/*
-int MotorPositionPredictor::case2_get_next_target_change(int Ni, int Nf,
-                                                         int actual_change) {
-  double a = -(m1 - m2) / 2;
-  double b = (m1 - m2) * Nf;
-  double c = -m1 * Ni * (Ni - 1) / 2 + m2 * Nf * (Nf + 1) / 2 - actual_change;
-  std::pair<double, double> Nts = quadratic_equation(a, b, c);
-  int Nt;
-  if (Ni < Nts.first <= Nf)
-    Nt = round(Nts.first);
-  else
-    Nt = round(Nts.second);
-  std::cout << "Nt " << Nt << std::endl;
-  return Nt;
-}
-*/
 
 double MotorPositionPredictor::case2_get_next_target_change(double Ni,
                                                             int actual_change) {
