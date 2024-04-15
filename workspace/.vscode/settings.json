@@ -1,0 +1,14 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/home/iron/antenna/auto_antenna_control/workspace/devel/lib/python3/dist-packages",
+        "/home/iron/mavros/devel/lib/python3/dist-packages",
+        "/home/iron/trajectory_gen/devel/lib/python3/dist-packages",
+        "/opt/ros/noetic/lib/python3/dist-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/iron/antenna/auto_antenna_control/workspace/devel/lib/python3/dist-packages",
+        "/home/iron/mavros/devel/lib/python3/dist-packages",
+        "/home/iron/trajectory_gen/devel/lib/python3/dist-packages",
+        "/opt/ros/noetic/lib/python3/dist-packages"
+    ]
+}

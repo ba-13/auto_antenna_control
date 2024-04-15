@@ -1,0 +1,39 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/iron/antenna/auto_antenna_control/workspace/devel/include/**",
+        "/opt/ros/noetic/include/**",
+        "/home/iron/trajectory_gen/devel/include/**",
+        "/home/iron/mavros/devel/include/**",
+        "/home/iron/antenna/auto_antenna_control/workspace/src/antenna_control/include/**",
+        "/home/iron/trajectory_gen/src/eigen_checks/include/**",
+        "/home/iron/mavros/src/iq_gnc/include/**",
+        "/home/iron/mavros/src/mavros/libmavconn/include/**",
+        "/home/iron/trajectory_gen/src/mav_comm/mav_msgs/include/**",
+        "/home/iron/trajectory_gen/src/mav_comm/mav_planning_msgs/include/**",
+        "/home/iron/trajectory_gen/src/mav_trajectory_generation/mav_trajectory_generation/include/**",
+        "/home/iron/trajectory_gen/src/mav_trajectory_generation/mav_trajectory_generation_ros/include/**",
+        "/home/iron/trajectory_gen/src/mav_trajectory_generation/mav_visualization/include/**",
+        "/home/iron/mavros/src/mavros/mavros/include/**",
+        "/home/iron/mavros/src/mavros/mavros_msgs/include/**",
+        "/home/iron/trajectory_gen/src/nlopt/include/**",
+        "/home/iron/antenna/auto_antenna_control/workspace/src/odom_estimate/include/**",
+        "/home/iron/antenna/auto_antenna_control/workspace/src/odom_simulate/include/**",
+        "/home/iron/mavros/src/mavros/test_mavros/include/**",
+        "/home/iron/antenna/auto_antenna_control/workspace/src/visualize/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}
