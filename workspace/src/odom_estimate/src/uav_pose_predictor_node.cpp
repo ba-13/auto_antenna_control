@@ -9,8 +9,8 @@ int main(int argc, char **argv)
   int rate, times;
   ros::init(argc, argv, "uav_pose_predictor");
   ros::NodeHandle nh;
-  nh.param<int>("~incoming_pose_rate", rate, 1);              // rate of incoming pose
-  nh.param<int>("~prediction_interpolation_times", times, 1); // rate of publishing pose
+  nh.param<int>("incoming_pose_rate", rate, 1);              // rate of incoming pose
+  nh.param<int>("prediction_interpolation_times", times, 1); // rate of publishing pose
   ROS_WARN_STREAM("rate: " << rate << " times: " << times);
 
   ros::Rate loop_rate(rate * times);

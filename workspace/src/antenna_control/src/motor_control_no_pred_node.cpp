@@ -9,7 +9,7 @@ int main(int argc, char **argv)
   ros::init(argc, argv, "motor_control");
   ros::NodeHandle nh;
 
-  nh.param<std::string>("~handle", motor_handle, "");
+  nh.param<std::string>("handle", motor_handle, "");
   nh.param<int>("prediction_pose_rate", r, 3);
   ROS_WARN_STREAM(ros::this_node::getName() << " - picked handle: " << motor_handle);
 

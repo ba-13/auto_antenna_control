@@ -39,7 +39,10 @@ private:
   }
 
 public:
-  MotorPositionPredictor(){};
+  MotorPositionPredictor()
+  {
+    std::cout << "A " << A << " B " << B << std::endl;
+  };
   MotorPositionPredictor(double m1, double m2, double A, double B) : M1(m1), M2(m2), A(A), B(B)
   {
     M1 *= TAU;

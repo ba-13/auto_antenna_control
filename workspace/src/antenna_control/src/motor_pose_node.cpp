@@ -14,9 +14,9 @@ int main(int argc, char **argv)
   double m1, m2;
   ros::Rate loop_rate(OBS_RATE);
 
-  nh.param<std::string>("~handle", motor_handle, "");
-  nh.param<double>("~m1", m1, 0.0159136635);
-  nh.param<double>("~m2", m2, -0.0172123864);
+  nh.param<std::string>("handle", motor_handle, "");
+  nh.param<double>("m1", m1, 0.0159136635);
+  nh.param<double>("m2", m2, -0.0172123864);
   ROS_WARN_STREAM(ros::this_node::getName() << " - picked handle: " << motor_handle);
 
   tic::variables TIC_VARS;
