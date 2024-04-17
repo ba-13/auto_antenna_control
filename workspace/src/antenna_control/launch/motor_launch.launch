@@ -1,8 +1,0 @@
-<launch>
-    <arg name="default_param_file" value="$(dirname)/../config/default.yaml" />
-
-    <node pkg="antenna_control" type="pose_node" name="pose_node" output="screen">
-        <rosparam command="load" file="$(arg default_param_file)" />
-        <rosparam command="load" file="$(arg overlying_param_file)" />
-    </node>
-</launch>

@@ -1,15 +1,14 @@
-#include<iostream>
-#include<ros/ros.h>
-#include<eigen3/Eigen/Dense>
-#include<geometry_msgs/PoseStamped.h>
-#include<geometry_msgs/TwistStamped.h>
-#include<sensor_msgs/Imu.h>
-#include<cmath>
-
+#include <iostream>
+#include <ros/ros.h>
+#include <eigen3/Eigen/Dense>
+#include <geometry_msgs/PoseStamped.h>
+#include <geometry_msgs/TwistStamped.h>
+#include <sensor_msgs/Imu.h>
+#include <cmath>
 
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "sim_drone_node");
+    ros::init(argc, argv, "drone_sim");
     ros::NodeHandle nh;
 
     ros::Rate loop_rate(1.0);
@@ -24,13 +23,12 @@ int main(int argc, char **argv)
     ros::Publisher pub_pose = nh.advertise<geometry_msgs::PoseStamped>("/virtual/pose", 1);
     ros::Publisher pub_vel = nh.advertise<geometry_msgs::TwistStamped>("/virtual/velocity", 1);
     ros::Publisher pub_imu = nh.advertise<sensor_msgs::Imu>("/virtual/imu", 1);
-    while(ros::ok())
+    while (ros::ok())
     {
-        // ROS_INFO("Hello, I am a simulated drone.");
         pose.x() = radius * cos(angle) + offset_x;
         pose.y() = radius * sin(angle) + offset_y;
         pose.z() = offset_z;
-        angle += (omega/1.0);
+        angle += (omega / 1.0);
         geometry_msgs::PoseStamped msg;
         msg.pose.position.x = pose.x();
         msg.pose.position.y = pose.y();
@@ -39,7 +37,7 @@ int main(int argc, char **argv)
         pub_pose.publish(msg);
 
         geometry_msgs::TwistStamped vel_msg;
-        vel_msg.twist.linear.x = -radius * omega * sin(angle);  
+        vel_msg.twist.linear.x = -radius * omega * sin(angle);
         vel_msg.twist.linear.y = radius * omega * cos(angle);
         vel_msg.twist.linear.z = 0.0;
         vel_msg.header.stamp = ros::Time::now();

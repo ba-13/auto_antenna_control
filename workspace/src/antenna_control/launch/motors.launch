@@ -1,0 +1,19 @@
+<launch>
+    <node pkg="antenna_control" type="motor_pose" name="motor_theta_pose" output="screen">
+        <rosparam command="load" file="$(find antenna_control)/config/motor_theta.yaml" />
+        <!-- publishes -->
+        <remap from="/motor/pose" to="/motor/theta/pose" />
+    </node>
+
+    <node pkg="antenna_control" type ="motor_control_node" name="motor_theta_control_node" output="screen">
+        <rosparam command="load" file="$(find odom_estimate)/config/predictor.yaml" />
+        <rosparam command="load" file="$(find antenna_control)/config/motor_theta.yaml" />
+
+        <!-- subscribes from uav_pose_predictor or test -->
+        <remap from="/motor/predicted/pose" to="/predicted/spherical_pose/theta" />
+        <!-- subscribes from motor_theta_pose -->
+        <remap from="/motor/pose" to="/motor/theta/pose" />
+        <!-- publishes -->
+        <remap from="/motor/command" to="/motor/theta/command" />
+    </node>
+</launch>

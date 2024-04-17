@@ -4,20 +4,20 @@
 #include <ros/ros.h>
 #include <tic.hpp>
 
-int main(int argc, char **argv) {
-  int RATE = 50;
+#define OBS_RATE 50
+
+int main(int argc, char **argv)
+{
   ros::init(argc, argv, "motor_pose_node");
   ros::NodeHandle nh;
-  std::string motor_name;
   std::string motor_handle;
-  nh.param<std::string>("motor", motor_name, "phi");
-  nh.param<std::string>("motor/" + motor_name, motor_handle, "");
-  ros::Rate loop_rate(RATE);
-  nh.param<int>("motor/rate", RATE, 50);
-
   double m1, m2;
-  nh.param<double>("motor/" + motor_name + "/m1", m1, 0.0159136635);
-  nh.param<double>("motor/" + motor_name + "/m2", m2, -0.0172123864);
+  ros::Rate loop_rate(OBS_RATE);
+
+  nh.param<std::string>("~handle", motor_handle, "");
+  nh.param<double>("~m1", m1, 0.0159136635);
+  nh.param<double>("~m2", m2, -0.0172123864);
+  ROS_WARN_STREAM(ros::this_node::getName() << " - picked handle: " << motor_handle);
 
   tic::variables TIC_VARS;
   tic::handle H(nullptr);
@@ -27,17 +27,20 @@ int main(int argc, char **argv) {
   else
     H = open_handle(nullptr);
 
-  ros::Publisher pub_motor_pose =
-      nh.advertise<messages::MotorPose>("/motor/" + motor_name + "/pose", 10);
+  ros::Publisher pub_motor_pose = nh.advertise<messages::MotorPose>("/motor/pose", 10);
 
   int prev = 0, pprev = 0; // assuming no overflow
   float prev_vel = 0;
   int over = 10;
 
-  while (ros::ok()) {
-    try {
+  while (ros::ok())
+  {
+    try
+    {
       TIC_VARS = H.get_variables();
-    } catch (const std::exception &error) {
+    }
+    catch (const std::exception &error)
+    {
       ROS_ERROR_STREAM("Handle error: " << error.what());
       if (over <= 0)
         return 1;
@@ -50,12 +53,15 @@ int main(int argc, char **argv) {
     int p = TIC_VARS.get_current_position();
     int v = TIC_VARS.get_current_velocity();
     pose.step = p;
-    pose.velocity = (v / 10000) / RATE; // pulses per tau
+    pose.velocity = (v / 10000) / OBS_RATE; // pulses per tau
     pose.smooth_velocity = (p - pprev) / 2.0;
-    if (pose.velocity > 0) {
-      pose.smooth_velocity += m1 * 1000 / RATE;
-    } else if (pose.velocity < 0) {
-      pose.smooth_velocity -= m2 * 1000 / RATE;
+    if (pose.velocity > 0)
+    {
+      pose.smooth_velocity += m1 * 1000 / OBS_RATE;
+    }
+    else if (pose.velocity < 0)
+    {
+      pose.smooth_velocity -= m2 * 1000 / OBS_RATE;
     }
 
     pose.header.stamp = ros::Time::now();

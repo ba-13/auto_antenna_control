@@ -4,18 +4,18 @@
 #include <thread>
 #include <tic.hpp>
 
-namespace data_collection {
-
-tic::variables TIC_VARS;
-tic::handle H(nullptr);
-const int OBSERVATION_TAU = 5;
-bool RUNNING = true;
-bool WRITE = false;
-std::chrono::_V2::steady_clock::time_point TIME;
-std::vector<std::pair<int64_t, int>> POSITIONS;
-std::mutex MUTEX;
-std::string FILENAME;
-void thread_get_position();
+namespace data_collection
+{
+    tic::variables TIC_VARS;
+    tic::handle H(nullptr);
+    const int OBSERVATION_TAU = 20;
+    bool RUNNING = true;
+    bool WRITE = false;
+    std::chrono::_V2::steady_clock::time_point TIME;
+    std::vector<std::pair<int64_t, int>> POSITIONS;
+    std::mutex MUTEX;
+    std::string FILENAME;
+    void thread_get_position();
 
 } // namespace data_collection
 

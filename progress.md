@@ -69,3 +69,7 @@ Some notes after taking responses to target positions:
 # Day 9
 
 Azimuth - 19.2
+
+# Day 10
+
+Exporting libraries from other ROS packages, [here](https://jbohren.com/articles/modular-ros-packages#using-libraries-from-other-packages)
