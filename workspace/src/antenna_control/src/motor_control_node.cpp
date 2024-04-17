@@ -53,10 +53,12 @@ int main(int argc, char **argv)
     int target_steps = predictor->translate_to_steps(target);
     auto command = predictor->get_next_target_change(smooth_vel, target_steps - curr_steps, 1000 / (20 * r));
     ROS_INFO_STREAM("curr steps: " << curr_steps);
+    // std::pair<double, double> command = {0, target_steps - curr_steps}; // not using predictor
 
     std_msgs::Float32 command_msg;
-    command_msg.data = (curr_steps + command.second - factorB) / factorA; // publishing theta
+    command_msg.data = (curr_steps + command.second - factorB); // publishing theta
     H.set_target_position(command_msg.data);
+    command_msg.data = command_msg.data/factorA;
     ROS_INFO("Command: %d %lf %d %f", target_steps, command.first, target_steps - curr_steps, command_msg.data);
     motor_commands.publish(command_msg);
     rate.sleep();

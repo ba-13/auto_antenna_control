@@ -15,12 +15,12 @@ int main(int argc, char **argv)
   ros::Rate rate(r);
 
   ros::Publisher motor_pose_pub = nh.advertise<std_msgs::Float32>("/motor_pose_sim_prediction", 5);
-  ros::Publisher lagged_command = nh.advertise<std_msgs::Int32>("/motor_pose_sim_curr", 5);
+  ros::Publisher lagged_command = nh.advertise<std_msgs::Float32>("/motor_pose_sim_curr", 5);
 
   double omega = 2 * M_PI * 0.2;
   std_msgs::Float32 msgF;
   double time_horizon = 1 / r;
-  double A = 30; // in degrees
+  double A = 15; // in degrees
 
   while (ros::ok())
   {
@@ -31,6 +31,7 @@ int main(int argc, char **argv)
     motor_pose_pub.publish(msgF);
 
     double data = A * std::sin(omega * curr_time);
+    msgF.data = data*factorA + factorB;
     lagged_command.publish(msgF);
     rate.sleep();
   }
