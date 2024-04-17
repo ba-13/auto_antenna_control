@@ -1,7 +1,18 @@
 #include <ros/ros.h>
 #include "antenna_control/tic_lib.hpp"
-
+#include <geometry_msgs/Quaternion.h>
+#include<eigen3/Eigen/Dense>
 // void orientation_callback(const geometry)
+
+float offset = 0.0;
+
+void antenna_orientation_callback(const geometry_msgs::Quaternion::ConstPtr& msg)
+{
+  Eigen::Quaterniond q(msg->w, msg->x, msg->y, msg->z);
+  Eigen::Vector3d euler = q.toRotationMatrix().eulerAngles(0, 1, 2);
+  // get yaw
+  offset = euler[2];
+}
 
 int main(int argc, char **argv)
 {
@@ -39,6 +50,19 @@ int main(int argc, char **argv)
   }
 
   H.halt_and_set_position(0); // set this position as 0
-
+  ros::Rate r(10);
+  int i = 0;
+  while (ros::ok())
+  {
+    ros::spinOnce();
+    r.sleep();
+    i++;
+    if (i == 50)
+      break;
+  }
+  nh.setParam("offset", offset);
   return 0;
 }
+
+
+
