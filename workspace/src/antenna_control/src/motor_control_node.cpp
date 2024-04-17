@@ -47,12 +47,13 @@ int main(int argc, char **argv)
     ros::spinOnce();
 
     int target_steps = predictor->translate_to_steps(target);
+    ROS_INFO_STREAM("target steps: " << target_steps);
     auto command = predictor->get_next_target_change(smooth_vel, target_steps - curr_steps, 1000 / (20 * r));
 
-    H.set_target_position(curr_steps + command.second);
     std_msgs::Int32 command_msg;
     command_msg.data = curr_steps + command.second;
-    ROS_INFO("Command: %d %lf %lf", target_steps, command.first, curr_steps + command.second);
+    H.set_target_position(command_msg.data);
+    // ROS_INFO("Command: %d %lf %d %d", target_steps, command.first, target_steps - curr_steps, command_msg.data);
     motor_commands.publish(command_msg);
     rate.sleep();
   }

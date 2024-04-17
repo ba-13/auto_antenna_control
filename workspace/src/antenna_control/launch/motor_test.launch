@@ -1,21 +1,22 @@
 <launch>
+    <rosparam command="load" file="$(find odom_estimate)/config/predictor.yaml" />
+    <rosparam command="load" file="$(find antenna_control)/config/motor_default.yaml" />
+
     <node pkg="odom_simulate" type="angle_sim" name="angle_sim" output="screen">
+
         <!-- publishes -->
         <remap from="/motor_pose_sim_prediction" to="/predicted/spherical_pose" />
         <!-- publishes -->
-        <remap from="/motor_pose_sim_curr" to="/predicted/spherical_pose/lagged" />
+        <remap from="/motor_pose_sim_curr" to="/predicted/spherical_pose_lagged" />
     </node>
 
     <node pkg="antenna_control" type="motor_pose" name="motor_pose" output="screen">
-        <rosparam command="load" file="$(find antenna_control)/config/motor_default.yaml" />
 
         <!-- publishes -->
         <remap from="/motor/pose" to="/motor/pose" />
     </node>
 
     <node pkg="antenna_control" type ="motor_control" name="motor_control" output="screen">
-        <rosparam command="load" file="$(find odom_estimate)/config/predictor.yaml" />
-        <rosparam command="load" file="$(find antenna_control)/config/motor_default.yaml" />
 
         <!-- subscribes from angle_sim -->
         <remap from="/target/predicted/pose" to="/predicted/spherical_pose" />

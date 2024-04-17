@@ -1,3 +1,3 @@
 incoming_pose_rate: 1
-prediction_interpolation_times: 3 # so predictor would publish at incoming_pose_rate * prediction_interpolation_times
-prediction_pose_rate: 3 # incoming_pose_rate * prediction_interpolation_times
+prediction_interpolation_times: 5 # so predictor would publish at incoming_pose_rate * prediction_interpolation_times
+prediction_pose_rate: 5 # incoming_pose_rate * prediction_interpolation_times
