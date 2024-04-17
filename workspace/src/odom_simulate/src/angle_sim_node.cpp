@@ -19,9 +19,8 @@ int main(int argc, char **argv)
 
   double omega = 2 * M_PI * 0.2;
   std_msgs::Float32 msgF;
-  std_msgs::Int32 msgI;
   double time_horizon = 1 / r;
-  double A = 10; // in degrees
+  double A = 30; // in degrees
 
   while (ros::ok())
   {
@@ -32,8 +31,7 @@ int main(int argc, char **argv)
     motor_pose_pub.publish(msgF);
 
     double data = A * std::sin(omega * curr_time);
-    msgI.data = data * factorA + factorB;
-    lagged_command.publish(msgI);
+    lagged_command.publish(msgF);
     rate.sleep();
   }
 
