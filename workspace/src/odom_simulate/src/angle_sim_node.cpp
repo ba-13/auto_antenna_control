@@ -6,12 +6,12 @@ int main(int argc, char **argv)
 {
   ros::init(argc, argv, "angle_sim");
   ros::NodeHandle nh;
-  int r;
+  double r;
   double factorA, factorB;
 
   nh.param<double>("A", factorA, 8.88888888);
   nh.param<double>("B", factorB, 0);
-  nh.param<int>("prediction_pose_rate", r, 3);
+  nh.param<double>("prediction_pose_rate", r, 3);
   ros::Rate rate(r);
 
   ros::Publisher motor_pose_pub = nh.advertise<std_msgs::Float32>("/motor_pose_sim_prediction", 5);
@@ -21,17 +21,18 @@ int main(int argc, char **argv)
   std_msgs::Float32 msgF;
   double time_horizon = 1 / r;
   double A = 15; // in degrees
+  auto start_time = ros::Time::now().toSec();
 
   while (ros::ok())
   {
-    auto curr_time = ros::Time::now().toSec();
+    auto curr_time = ros::Time::now().toSec() - start_time;
 
     msgF.data = A * std::sin(omega * (curr_time + time_horizon)); // perfect prediction
-    ROS_WARN_STREAM("target from sim: " << int(msgF.data * factorA + factorB));
+    // ROS_WARN_STREAM("target from sim: " << int(msgF.data * factorA + factorB));
     motor_pose_pub.publish(msgF);
 
     double data = A * std::sin(omega * curr_time);
-    msgF.data = data*factorA + factorB;
+    msgF.data = data * factorA + factorB;
     lagged_command.publish(msgF);
     rate.sleep();
   }

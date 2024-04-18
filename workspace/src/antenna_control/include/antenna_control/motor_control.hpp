@@ -1,6 +1,7 @@
 #include "antenna_control/predictor_lib.hpp"
 #include "antenna_control/tic_lib.hpp"
 #include "messages/MotorPose.h"
+#include "messages/AngleStamped.h"
 #include <ros/ros.h>
 #include <std_msgs/Float32.h>
 
@@ -11,9 +12,9 @@ int curr_steps = 0;
 int curr_vel = 0;
 int smooth_vel = 0;
 
-void target_pose_callback(const std_msgs::Float32::ConstPtr &msg)
+void target_pose_callback(const messages::AngleStamped &msg)
 {
-  target = msg->data; // angle
+  target = msg.angle;
 }
 
 void motor_pose_callback(const messages::MotorPose::ConstPtr &msg)

@@ -1,3 +1,16 @@
 <launch>
+    <rosparam command="load" file="$(find odom_estimate)/config/predictor.yaml" />
+
+    <node pkg="odom_simulate" type="drone_sim" name="drone_sim" output="screen">
+        <rosparam command="load" file="$(find odom_simulate)/config/drone_sim.yaml" />
+        <remap from="/virtual/pose" to="/current/pose" />
+        <remap from="/virtual/velocity" to="/current/velocity" />
+        <remap from="/virtual/imu" to="/current/acceleration" />
+    </node>
+
+    <node pkg="odom_estimate" type="uav_pose_predictor" name="uav_pose_predictor" output="screen">
+        <remap from="/predicted/pose/phi" to="/predicted/spherical_pose/phi" />
+        <remap from="/predicted/pose/theta" to="/predicted/spherical_pose/theta" />
+    </node>
 
 </launch>

@@ -73,3 +73,5 @@ Azimuth - 19.2
 # Day 10
 
 Exporting libraries from other ROS packages, [here](https://jbohren.com/articles/modular-ros-packages#using-libraries-from-other-packages)
+
+Refactoring led to increased delay! Have to backtrace to check where the problem lies in.

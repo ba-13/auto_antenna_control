@@ -6,6 +6,7 @@
         <remap from="/current/velocity" to="/mavros/local_position/velocity_body/twist/linear" />
         <remap from="/current/acceleration" to="/mavros/imu/data/linear_acceleration" />
         <!-- publishes -->
-        <remap from="/predicted/pose" to="/predicted/spherical_pose" />
+        <remap from="/predicted/pose/theta" to="/predicted/spherical_pose/theta" />
+        <remap from="/predicted/pose/phi" to="/predicted/spherical_pose/phi" />
     </node>
 </launch>

@@ -1,19 +1,43 @@
 <launch>
-    <node pkg="antenna_control" type="motor_pose" name="motor_theta_pose" output="screen">
-        <rosparam command="load" file="$(find antenna_control)/config/motor_theta.yaml" />
-        <!-- publishes -->
-        <remap from="/motor/pose" to="/motor/theta/pose" />
-    </node>
+    <include file="$(find odom_estimate)/launch/divine_plan.launch" />
 
-    <node pkg="antenna_control" type ="motor_control" name="motor_theta_control" output="screen">
-        <rosparam command="load" file="$(find odom_estimate)/config/predictor.yaml" />
+    <group ns="theta">
         <rosparam command="load" file="$(find antenna_control)/config/motor_theta.yaml" />
+        <node pkg="antenna_control" type="motor_pose" name="motor_theta_pose" output="screen">
 
-        <!-- subscribes from uav_pose_predictor or test -->
-        <remap from="/motor/predicted/pose" to="/predicted/spherical_pose/theta" />
-        <!-- subscribes from motor_theta_pose -->
-        <remap from="/motor/pose" to="/motor/theta/pose" />
-        <!-- publishes -->
-        <remap from="/motor/command" to="/motor/theta/command" />
-    </node>
+            <!-- publishes -->
+            <remap from="/motor/pose" to="/motor/theta/pose" />
+        </node>
+
+        <node pkg="antenna_control" type ="motor_control" name="motor_theta_control" output="screen">
+            <rosparam command="load" file="$(find odom_estimate)/config/predictor.yaml" />
+
+            <!-- subscribes from uav_pose_predictor or test -->
+            <remap from="/target/predicted/pose/angle" to="/predicted/spherical_pose/theta" />
+            <!-- subscribes from motor_theta_pose -->
+            <remap from="/motor/pose" to="/motor/theta/pose" />
+            <!-- publishes -->
+            <remap from="/motor/command" to="/motor/theta/command" />
+        </node>
+    </group>
+
+    <group ns="phi">
+        <rosparam command="load" file="$(find antenna_control)/config/motor_phi.yaml" />
+        <node pkg="antenna_control" type="motor_pose" name="motor_phi_pose" output="screen">
+
+            <!-- publishes -->
+            <remap from="/motor/pose" to="/motor/phi/pose" />
+        </node>
+
+        <node pkg="antenna_control" type ="motor_control" name="motor_phi_control" output="screen">
+            <rosparam command="load" file="$(find odom_estimate)/config/predictor.yaml" />
+
+            <!-- subscribes from uav_pose_predictor or test -->
+            <remap from="/target/predicted/pose/angle" to="/predicted/spherical_pose/phi" />
+            <!-- subscribes from motor_phi_pose -->
+            <remap from="/motor/pose" to="/motor/phi/pose" />
+            <!-- publishes -->
+            <remap from="/motor/command" to="/motor/phi/command" />
+        </node>
+    </group>
 </launch>

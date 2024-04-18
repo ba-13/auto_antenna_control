@@ -1,6 +1,6 @@
 #include <ros/ros.h>
 #include "odom_estimate/predictor_lib.hpp"
-#include "messages/SphericalPose.h"
+#include "messages/AngleStamped.h"
 
 float rad_to_deg(float rad) { return rad * 180 / M_PI; }
 
@@ -22,10 +22,11 @@ int main(int argc, char **argv)
   ros::Subscriber sub_pose = nh.subscribe("/current/pose", 1, &Predictor::set_position, &predictor);
   ros::Subscriber sub_vel = nh.subscribe("/current/velocity", 1, &Predictor::set_velocity, &predictor);
   ros::Subscriber sub_acc = nh.subscribe("/current/acceleration", 1, &Predictor::set_acceleration, &predictor);
-  ros::Publisher pub_predicted_position = nh.advertise<geometry_msgs::PoseStamped>("/predicted/pose", 1);
+  ros::Publisher theta_predicted_position = nh.advertise<messages::AngleStamped>("/predicted/pose/theta", 1);
+  ros::Publisher phi_predicted_position = nh.advertise<messages::AngleStamped>("/predicted/pose/phi", 1);
 
   int counter = -1;
-  messages::SphericalPose msg;
+  messages::AngleStamped msg;
   while (ros::ok())
   {
     counter++;
@@ -35,10 +36,13 @@ int main(int argc, char **argv)
       counter = 0;
     }
     msg.header.stamp = predictor.predict_position();
-    msg.radius = predictor.predicted_position_rtp(0);
-    msg.theta = rad_to_deg(predictor.predicted_position_rtp(1)); // sent in degrees
-    msg.phi = rad_to_deg(predictor.predicted_position_rtp(2));
-    pub_predicted_position.publish(msg);
+    // msg.radius = predictor.predicted_position_rtp(0);
+
+    // sent in degrees
+    msg.angle = rad_to_deg(predictor.predicted_position_rtp(1));
+    theta_predicted_position.publish(msg);
+    msg.angle = rad_to_deg(predictor.predicted_position_rtp(2));
+    phi_predicted_position.publish(msg);
     loop_rate.sleep(); // call every rate*times Hz
   }
   return 0;
