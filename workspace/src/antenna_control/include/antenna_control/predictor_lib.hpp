@@ -54,7 +54,8 @@ public:
 
   std::pair<double, double> get_next_target_change(double init_velocity, int actual_change, int timesteps);
 
-  double translate_to_steps(double theta);
+  double theta_to_steps(double theta);
+  double steps_to_theta(int steps);
 };
 
 Eigen::MatrixXf generate_speed_transform(int n);

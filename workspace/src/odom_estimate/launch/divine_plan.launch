@@ -9,6 +9,9 @@
     </node>
 
     <node pkg="odom_estimate" type="uav_pose_predictor" name="uav_pose_predictor" output="screen">
+        <remap from="/current/pose" to="/current/pose" />
+        <remap from="/current/velocity" to="/current/velocity" />
+        <remap from="/current/acceleration" to="/current/acceleration" />
         <remap from="/predicted/pose/phi" to="/predicted/spherical_pose/phi" />
         <remap from="/predicted/pose/theta" to="/predicted/spherical_pose/theta" />
     </node>

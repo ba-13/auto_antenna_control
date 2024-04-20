@@ -59,17 +59,17 @@ int main(int argc, char **argv)
       target = max_degrees;
     }
 
-    int target_steps = predictor->translate_to_steps(target);
+    int target_steps = predictor->theta_to_steps(target);
     auto command = predictor->get_next_target_change(smooth_vel, target_steps - curr_steps, 1000 / (20 * r));
     // std::pair<double, double> command = {0, target_steps - curr_steps}; // not using predictor
 
     std_msgs::Float32 command_msg;
     command_msg.data = (curr_steps + command.second); // publishing theta
     H.set_target_position(command_msg.data);
-    command_msg.data = command_msg.data / factorA;
+    command_msg.data = predictor->steps_to_theta(command_msg.data);
+    motor_commands.publish(command_msg);
 
     ROS_INFO("%s target_rec: %f %d; %lf == %d; command: %f, curr: %d", ros::this_node::getName().c_str(), target, target_steps, command.first, target_steps - curr_steps, command_msg.data, curr_steps);
-    motor_commands.publish(command_msg);
     rate.sleep();
   }
 

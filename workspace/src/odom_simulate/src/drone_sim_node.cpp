@@ -8,7 +8,7 @@
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "drone_sim");
-    ros::NodeHandle nh;
+    ros::NodeHandle nh("~");
 
     ros::Rate loop_rate(1.0);
     Eigen::Vector3f pose(0.0f, 0.0f, 0.0f);
@@ -24,7 +24,7 @@ int main(int argc, char **argv)
     nh.param<double>("z", offset_z, 2.0);
     nh.param<double>("radius", radius, 6.0);
     nh.param<double>("omega", omega, 0.6);
-    ROS_INFO_STREAM("x " << offset_x << " radius " << radius);
+    ROS_INFO_STREAM("x " << offset_x << " radius " << radius << " omega " << omega);
 
     ros::Publisher pub_pose = nh.advertise<geometry_msgs::PoseStamped>("/virtual/pose", 1);
     ros::Publisher pub_vel = nh.advertise<geometry_msgs::Vector3>("/virtual/velocity", 1);

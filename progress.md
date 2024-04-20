@@ -75,3 +75,12 @@ Azimuth - 19.2
 Exporting libraries from other ROS packages, [here](https://jbohren.com/articles/modular-ros-packages#using-libraries-from-other-packages)
 
 Refactoring led to increased delay! Have to backtrace to check where the problem lies in.
+
+# Day 11
+
+Antenna is now tracking a simulated UAV. The UAV pose predictions are a bit weird, and have to correct publishing of either just steps
+or just degrees
+
+# Day 12
+
+An idea: Can include a feedback from motor control back to predictor about the average lag induced between the passing of angle target packets between them, this can lead to an improved time_horizon
