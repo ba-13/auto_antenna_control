@@ -72,7 +72,6 @@ add_library(motor_predictor_lib
 add_executable(tic_collect_data src/tic_collect_data_node.cpp)
 add_executable(motor_pose src/motor_pose_node.cpp)
 add_executable(motor_control src/motor_control_node.cpp)
-add_executable(motor_control_no_pred src/motor_control_no_pred_node.cpp)
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use
@@ -103,12 +102,6 @@ target_link_libraries(motor_control
   motor_predictor_lib
 )
 
-target_link_libraries(motor_control_no_pred
-  ${catkin_LIBRARIES} 
-  pololu-tic-1
-  tic_lib 
-  motor_predictor_lib
-)
 # target_link_libraries(tic_predictor
 #   ${Eigen3_LIBRARIES}
 # )
