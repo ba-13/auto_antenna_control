@@ -22,7 +22,7 @@ int main(int argc, char **argv)
   ros::Rate rate(r);
   ros::Subscriber motor_pose_sub = nh.subscribe("/target/predicted/pose/angle", r, target_pose_callback);
   ros::Subscriber motor_info_sub = nh.subscribe("/motor/pose", r, motor_pose_callback);
-  ros::Publisher motor_commands = nh.advertise<std_msgs::Float32>("/motor/command", 5);
+  ros::Publisher motor_commands = nh.advertise<std_msgs::Float32>("/motor/pose/angle", 1);
   tic::handle H(nullptr);
 
   if (motor_handle != "none")
@@ -63,13 +63,12 @@ int main(int argc, char **argv)
     auto command = predictor->get_next_target_change(smooth_vel, target_steps - curr_steps, 1000 / (20 * r));
     // std::pair<double, double> command = {0, target_steps - curr_steps}; // not using predictor
 
-    std_msgs::Float32 command_msg;
-    command_msg.data = (curr_steps + command.second); // publishing theta
-    H.set_target_position(command_msg.data);
-    command_msg.data = predictor->steps_to_theta(command_msg.data);
-    motor_commands.publish(command_msg);
+    std_msgs::Float32 current_pose;
+    H.set_target_position(curr_steps + command.second);
+    current_pose.data = predictor->steps_to_theta(curr_steps);
+    motor_commands.publish(current_pose);
 
-    ROS_INFO("%s target_rec: %f %d; %lf == %d; command: %f, curr: %d", ros::this_node::getName().c_str(), target, target_steps, command.first, target_steps - curr_steps, command_msg.data, curr_steps);
+    ROS_INFO("%s target_rec: %f %d; %lf == %d; curr: %d", ros::this_node::getName().c_str(), target, target_steps, command.first, target_steps - curr_steps, curr_steps);
     rate.sleep();
   }
 

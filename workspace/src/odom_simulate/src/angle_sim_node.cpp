@@ -32,7 +32,7 @@ int main(int argc, char **argv)
     motor_pose_pub.publish(msgF);
 
     double data = A * std::sin(omega * curr_time);
-    msgF.data = data * factorA + factorB;
+    msgF.data = data;
     lagged_command.publish(msgF);
     rate.sleep();
   }
