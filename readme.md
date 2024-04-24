@@ -51,10 +51,27 @@ The actual position of the antenna is coming on the topic ```aantenna/pose```
 
 By plotting these two together, we can asses the performance of the tracker. 
 
+A brief overview of the results is presented here. 
+### For an Unloaded motor
+In both the pictures that follow, the blue line represents the motor angle, while the red line represents the angle the motor is supposed to be at.
 
-A formal documentation is presented here
+Here is how the results look for our control system
+![alt](pictures/elevation_first_run_with_predictor.png)
+
+When we remove our control system and predictor, the results look like
+![alt](pictures/elevation_first_run_without_predictor.png)
+As we can see, our control system vastly reduces the lag in tracking. In fact, the tracker is running almost in real time.
+
+### In actual run
+![alt](pictures/with_mocap_2304/Screenshot%20from%202024-04-24%2006-50-00.png)
+
+A few ket observations can be made here. Initially the antenna was very far from the actual orientation, observe how quickly it catches up. The loaded motor struggles to catch up with quick changes in angle. We are looking into this issue as of now.
+
+### A formal documentation is presented here
 
 ![alt](pictures/p1.png)
 ![alt](pictures/p2.png)
 ![alt](pictures/p3.png)
 ![alt](pictures/p4.png)
+
+
