@@ -50,3 +50,11 @@ The current position of the simulated drone is being published on the topics ```
 The actual position of the antenna is coming on the topic ```aantenna/pose```
 
 By plotting these two together, we can asses the performance of the tracker. 
+
+
+A formal documentation is presented here
+
+![alt](pictures/p1.png)
+![alt](pictures/p2.png)
+![alt](pictures/p3.png)
+![alt](pictures/p4.png)
