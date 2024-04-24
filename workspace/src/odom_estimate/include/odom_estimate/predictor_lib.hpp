@@ -9,9 +9,10 @@ private:
     double time_horizon;
     double lag;
     double last_time;
-    Eigen::Vector3f position, velocity, acceleration;
 
 public:
+    Eigen::Vector3f position, velocity, acceleration;
+
     // time horizon is the time after current time the pose is for
     Predictor(double time_horizon);
     Eigen::Vector3f predicted_position;

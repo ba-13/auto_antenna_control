@@ -24,7 +24,8 @@ int main(int argc, char **argv)
   ros::Subscriber sub_acc = nh.subscribe("/current/acceleration", 1, &Predictor::set_acceleration, &predictor);
   ros::Publisher theta_predicted_position = nh.advertise<messages::AngleStamped>("/predicted/pose/theta", 1);
   ros::Publisher phi_predicted_position = nh.advertise<messages::AngleStamped>("/predicted/pose/phi", 1);
-
+  ros::Publisher theta_position = nh.advertise<messages::AngleStamped>("/current/pose/theta", 1);
+  ros::Publisher phi_position = nh.advertise<messages::AngleStamped>("/current/pose/phi", 1);
   int counter = -1;
   messages::AngleStamped msg;
   while (ros::ok())
@@ -35,9 +36,13 @@ int main(int argc, char **argv)
       ros::spinOnce(); // callbacks and sets last seen time
       counter = 0;
     }
+    auto rtp_pose = cartesian_to_spherical(predictor.position);
+    msg.angle = rad_to_deg(rtp_pose(1));
+    theta_position.publish(msg);
+    msg.angle = rad_to_deg(rtp_pose(2));
+    phi_position.publish(msg);
     msg.header.stamp = predictor.predict_position();
     // msg.radius = predictor.predicted_position_rtp(0);
-
     // sent in degrees
     msg.angle = rad_to_deg(predictor.predicted_position_rtp(1));
     theta_predicted_position.publish(msg);
