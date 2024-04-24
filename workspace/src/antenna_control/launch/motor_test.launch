@@ -1,6 +1,6 @@
 <launch>
-    <rosparam command="load" file="$(find odom_estimate)/config/predictor.yaml" />
-    <rosparam command="load" file="$(find antenna_control)/config/motor_theta.yaml" />
+    <rosparam command="load" file="$(find messages)/config/predictor.yaml" />
+    <rosparam command="load" file="$(find messages)/config/motor_theta.yaml" />
 
     <node pkg="odom_simulate" type="angle_sim" name="angle_sim" output="screen">
 
@@ -23,6 +23,6 @@
         <!-- subscribes from motor_pose -->
         <remap from="/motor/pose" to="/motor/pose" />
         <!-- publishes -->
-        <remap from="/motor/command" to="/motor/command" />
+        <remap from="/motor/pose/angle" to="/motor/pose/theta" />
     </node>
 </launch>
