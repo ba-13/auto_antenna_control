@@ -1,0 +1,6 @@
+<launch>
+    <node pkg="antenna_control" type="antenna_pose_node" name="antenna_pose_node" output="screen">
+        <remap from="/antenna/pose" to="/antenna_pose" />
+        <remap from="/qualisys/AAT/odom" />
+    </node>
+</launch>
