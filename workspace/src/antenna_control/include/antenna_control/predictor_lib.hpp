@@ -60,3 +60,4 @@ public:
 
 Eigen::MatrixXf generate_speed_transform(int n);
 std::pair<double, double> quadratic_equation(double a, double b, double c);
+Eigen::Vector3d quaternion_to_rpy(Eigen::Quaterniond q);

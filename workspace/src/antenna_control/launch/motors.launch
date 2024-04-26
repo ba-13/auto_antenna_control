@@ -1,6 +1,11 @@
 <launch>
     <include file="$(find odom_estimate)/launch/divine_plan.launch" />
 
+    <node pkg="antenna_control" type="antenna_pose_node" name="antenna_pose_node" output="screen">
+        <remap from="/antenna/pose" to="/antenna_pose" />
+        <remap from="/qualisys/AAT/odom" />
+    </node>
+
     <group ns="theta">
         <rosparam command="load" file="$(find messages)/config/motor_theta.yaml" />
         <node pkg="antenna_control" type="motor_pose" name="motor_theta_pose" output="screen">

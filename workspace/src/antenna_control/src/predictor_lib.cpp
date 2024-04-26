@@ -167,3 +167,9 @@ MatrixXf generate_speed_transform(int n)
   transform(1, mat.cols() - 1) = 0;
   return transform;
 }
+
+Eigen::Vector3d quaternion_to_rpy(Eigen::Quaterniond q)
+{
+  q.normalize();
+  return q.toRotationMatrix().eulerAngles(0, 1, 2);
+}
